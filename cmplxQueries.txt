@@ -1,0 +1,19 @@
+select player.ID,player.name,player.username,stats.lifetime_wins,stats.lifetime_wins/stats.lifetime_games as win_ratio from player inner join stats on stats.player_id=player.ID order by win_ratio desc limit 5;
+
+select legendID,name,category,passive,tactical,ultimate from legends where win_rate = (select max(win_rate) from legends as f where f.category = legends.category);
+
+select player.ID,player.name, ranks.kills/ranks.deaths as KDR from ranks inner join player on player.ID = ranks.player_id order by KDR desc;
+
+select loot_tier,count(loot_tier) as num_of_locations,sum(common_loot) as total_common,sum(rare_loot) as total_rare,sum(epic_loot) as total_epic,sum(legendary_loot) as total_legendary from olympus group by loot_tier;
+
+select itemsID,name,category,rarity,if(right(rarity,1)='c','common',if(right(rarity,1)='r','rare',if(right(rarity,1)='e','epic',if(right(rarity,1)='l','legendary','unknown item')))) as max_rarity from items;
+
+select seasons.season_number,seasons.name as season_name,legends.name as added_legend,weapons.name as added_gun from seasons inner join legends on legend_added=legends.legendID inner join weapons on weapon_added=weapons.weaponID;
+
+select category,avg(damage),avg(RPM),avg(capacity),avg(reload_time) from weapons group by category;
+
+select player.ID,player.name,player.username,if(bp_level<0,'!___BANNED___!','ACTIVE') as STATUS from player inner join stats on stats.player_id=player.ID;
+
+select location,common_loot+epic_loot+rare_loot+legendary_loot as total_loot from olympus order by total_loot desc limit 1;
+
+select player.ID,player.name,player.username,ranks.p_rank,case when ranks.p_rank='Master' then "2,000 CREDITS AWARDED" when ranks.p_rank='Predator' then "FREE LIFETIME MEMBERSHIP" ELSE "" end as REWARDS from player inner join ranks on ranks.player_id=player.ID where ranks.p_rank='Predator' or ranks.p_rank='Master';
